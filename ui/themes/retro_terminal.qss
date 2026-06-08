@@ -1,0 +1,141 @@
+/* ═══════════════════════════════════════════════
+   Theme: Retro Terminal  —  复古 CRT 终端绿风格
+   ═══════════════════════════════════════════════ */
+
+#MainWidget {
+    background: rgba(8, 14, 12, 248);
+    border: 1px solid rgba(0, 255, 65, 55);
+    border-radius: 10px;
+}
+
+#HeaderBar {
+    background: transparent;
+    border-bottom: 1px solid rgba(0, 255, 65, 25);
+    min-height: 36px;
+}
+
+#AppTitle {
+    color: rgba(0, 255, 65, 230);
+    font-family: "Consolas", "Lucida Console", "Courier New";
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+#PlanBadge {
+    color: rgba(0, 200, 50, 255);
+    background: rgba(0, 255, 65, 10);
+    border: 1px solid rgba(0, 255, 65, 40);
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 7px;
+    font-family: "Consolas";
+    letter-spacing: 0.5px;
+}
+
+#IconButton {
+    background: transparent;
+    border: none;
+    color: rgba(0, 180, 45, 180);
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 3px 5px;
+}
+#IconButton:hover {
+    background: rgba(0, 255, 65, 15);
+    color: rgba(0, 255, 65, 255);
+}
+#IconButton:pressed {
+    background: rgba(0, 255, 65, 28);
+}
+
+#CloseButton {
+    background: transparent;
+    border: none;
+    color: rgba(0, 180, 45, 160);
+    font-size: 13px;
+    border-radius: 4px;
+    padding: 3px 5px;
+}
+#CloseButton:hover {
+    background: rgba(255, 50, 50, 18);
+    color: rgba(255, 80, 80, 255);
+}
+
+#MetricValue {
+    color: rgba(0, 255, 65, 255);
+    font-family: "Consolas", "Lucida Console";
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#MetricLabel {
+    color: rgba(0, 180, 45, 200);
+    font-family: "Consolas", "Lucida Console";
+    font-size: 10px;
+    letter-spacing: 0.3px;
+}
+
+#MetricValueSmall {
+    color: rgba(0, 240, 60, 235);
+    font-family: "Consolas", "Lucida Console";
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#Divider {
+    background: rgba(0, 255, 65, 20);
+    max-height: 1px;
+    min-height: 1px;
+}
+
+#SectionTitle {
+    color: rgba(0, 200, 50, 180);
+    font-family: "Consolas";
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+#ExpandButton {
+    background: transparent;
+    border: 1px solid rgba(0, 255, 65, 30);
+    border-radius: 4px;
+    color: rgba(0, 180, 45, 200);
+    font-size: 9px;
+    font-family: "Consolas";
+    padding: 2px 12px;
+}
+#ExpandButton:hover {
+    background: rgba(0, 255, 65, 10);
+    border-color: rgba(0, 255, 65, 60);
+    color: rgba(0, 255, 65, 255);
+}
+
+#StatusBar {
+    color: rgba(0, 140, 35, 180);
+    font-family: "Consolas";
+    font-size: 9px;
+}
+#StatusBar[error="true"] {
+    color: rgba(255, 80, 80, 200);
+}
+
+#ModelName {
+    color: rgba(0, 180, 45, 200);
+    font-family: "Consolas";
+    font-size: 10px;
+}
+#ModelCost {
+    color: rgba(0, 255, 65, 230);
+    font-family: "Consolas";
+    font-size: 10px;
+    font-weight: 700;
+}
+
+#AlertLabel {
+    color: rgba(255, 200, 0, 230);
+    font-size: 9px;
+    font-family: "Consolas";
+}

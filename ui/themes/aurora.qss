@@ -1,0 +1,145 @@
+/* ═══════════════════════════════════════════════
+   Theme: Aurora Glow  —  极光渐变风格
+   ═══════════════════════════════════════════════ */
+
+#MainWidget {
+    background: qlineargradient(
+        spread:pad, x1:0, y1:0, x2:1, y2:1,
+        stop:0 rgba(10, 40, 60, 230),
+        stop:0.4 rgba(20, 50, 80, 225),
+        stop:0.7 rgba(15, 55, 70, 228),
+        stop:1 rgba(30, 20, 60, 230)
+    );
+    border: 1px solid rgba(52, 211, 153, 55);
+    border-radius: 18px;
+}
+
+#HeaderBar {
+    background: transparent;
+    border-bottom: 1px solid rgba(52, 211, 153, 28);
+    min-height: 36px;
+}
+
+#AppTitle {
+    color: rgba(236, 253, 245, 230);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#PlanBadge {
+    color: rgba(52, 211, 153, 255);
+    background: rgba(52, 211, 153, 15);
+    border: 1px solid rgba(52, 211, 153, 40);
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 7px;
+    font-family: "Segoe UI";
+}
+
+#IconButton {
+    background: transparent;
+    border: none;
+    color: rgba(167, 243, 208, 180);
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 3px 5px;
+}
+#IconButton:hover {
+    background: rgba(52, 211, 153, 18);
+    color: rgba(52, 211, 153, 255);
+}
+#IconButton:pressed {
+    background: rgba(52, 211, 153, 35);
+}
+
+#CloseButton {
+    background: transparent;
+    border: none;
+    color: rgba(167, 243, 208, 160);
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 3px 5px;
+}
+#CloseButton:hover {
+    background: rgba(251, 113, 133, 20);
+    color: rgba(251, 113, 133, 255);
+}
+
+#MetricValue {
+    color: rgba(236, 253, 245, 255);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#MetricLabel {
+    color: rgba(167, 243, 208, 200);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 10px;
+}
+
+#MetricValueSmall {
+    color: rgba(236, 253, 245, 235);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#Divider {
+    background: rgba(52, 211, 153, 22);
+    max-height: 1px;
+    min-height: 1px;
+}
+
+#SectionTitle {
+    color: rgba(52, 211, 153, 180);
+    font-family: "Segoe UI";
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+#ExpandButton {
+    background: transparent;
+    border: 1px solid rgba(52, 211, 153, 32);
+    border-radius: 10px;
+    color: rgba(167, 243, 208, 200);
+    font-size: 9px;
+    font-family: "Segoe UI";
+    padding: 2px 12px;
+}
+#ExpandButton:hover {
+    background: rgba(52, 211, 153, 12);
+    border-color: rgba(52, 211, 153, 60);
+    color: rgba(52, 211, 153, 255);
+}
+
+#StatusBar {
+    color: rgba(110, 200, 160, 180);
+    font-family: "Segoe UI";
+    font-size: 9px;
+}
+#StatusBar[error="true"] {
+    color: rgba(251, 113, 133, 200);
+}
+
+#ModelName {
+    color: rgba(167, 243, 208, 200);
+    font-family: "Segoe UI";
+    font-size: 10px;
+}
+#ModelCost {
+    color: rgba(236, 253, 245, 220);
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 600;
+}
+
+#AlertLabel {
+    color: rgba(251, 191, 36, 230);
+    font-size: 9px;
+    font-family: "Segoe UI";
+}

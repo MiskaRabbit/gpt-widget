@@ -1,0 +1,139 @@
+/* ═══════════════════════════════════════════════
+   Theme: Minimal Light  —  极简亮色清爽风格
+   ═══════════════════════════════════════════════ */
+
+#MainWidget {
+    background: rgba(250, 251, 255, 248);
+    border: 1px solid rgba(148, 163, 184, 40);
+    border-radius: 16px;
+}
+
+#HeaderBar {
+    background: transparent;
+    border-bottom: 1px solid rgba(226, 232, 240, 255);
+    min-height: 36px;
+}
+
+#AppTitle {
+    color: rgba(30, 41, 59, 220);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+#PlanBadge {
+    color: rgba(59, 130, 246, 255);
+    background: rgba(59, 130, 246, 12);
+    border: 1px solid rgba(59, 130, 246, 40);
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 7px;
+    font-family: "Segoe UI";
+}
+
+#IconButton {
+    background: transparent;
+    border: none;
+    color: rgba(100, 116, 139, 200);
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 3px 5px;
+}
+#IconButton:hover {
+    background: rgba(59, 130, 246, 12);
+    color: rgba(59, 130, 246, 255);
+}
+#IconButton:pressed {
+    background: rgba(59, 130, 246, 22);
+}
+
+#CloseButton {
+    background: transparent;
+    border: none;
+    color: rgba(100, 116, 139, 180);
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 3px 5px;
+}
+#CloseButton:hover {
+    background: rgba(239, 68, 68, 12);
+    color: rgba(220, 38, 38, 255);
+}
+
+#MetricValue {
+    color: rgba(15, 23, 42, 255);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#MetricLabel {
+    color: rgba(100, 116, 139, 220);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 10px;
+}
+
+#MetricValueSmall {
+    color: rgba(30, 41, 59, 230);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#Divider {
+    background: rgba(226, 232, 240, 255);
+    max-height: 1px;
+    min-height: 1px;
+}
+
+#SectionTitle {
+    color: rgba(59, 130, 246, 200);
+    font-family: "Segoe UI";
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+#ExpandButton {
+    background: transparent;
+    border: 1px solid rgba(226, 232, 240, 255);
+    border-radius: 10px;
+    color: rgba(100, 116, 139, 220);
+    font-size: 9px;
+    font-family: "Segoe UI";
+    padding: 2px 12px;
+}
+#ExpandButton:hover {
+    background: rgba(59, 130, 246, 8);
+    border-color: rgba(59, 130, 246, 50);
+    color: rgba(59, 130, 246, 255);
+}
+
+#StatusBar {
+    color: rgba(148, 163, 184, 255);
+    font-family: "Segoe UI";
+    font-size: 9px;
+}
+#StatusBar[error="true"] {
+    color: rgba(220, 38, 38, 200);
+}
+
+#ModelName {
+    color: rgba(100, 116, 139, 220);
+    font-family: "Segoe UI";
+    font-size: 10px;
+}
+#ModelCost {
+    color: rgba(30, 41, 59, 230);
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 600;
+}
+
+#AlertLabel {
+    color: rgba(217, 119, 6, 230);
+    font-size: 9px;
+    font-family: "Segoe UI";
+}

@@ -1,0 +1,4 @@
+PyQt6>=6.6.0,<6.11
+curl_cffi>=0.13.0
+keyring>=24.0.0
+pywin32>=306

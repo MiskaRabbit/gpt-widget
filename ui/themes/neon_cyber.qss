@@ -1,0 +1,140 @@
+/* ═══════════════════════════════════════════════
+   Theme: Neon Cyber  —  霓虹赛博朋克风格
+   ═══════════════════════════════════════════════ */
+
+#MainWidget {
+    background: rgba(0, 0, 8, 242);
+    border: 1px solid rgba(0, 255, 255, 70);
+    border-radius: 14px;
+}
+
+#HeaderBar {
+    background: transparent;
+    border-bottom: 1px solid rgba(0, 255, 255, 30);
+    min-height: 36px;
+}
+
+#AppTitle {
+    color: rgba(0, 255, 255, 230);
+    font-family: "Consolas", "Courier New";
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+#PlanBadge {
+    color: rgba(255, 0, 255, 255);
+    background: rgba(255, 0, 255, 12);
+    border: 1px solid rgba(255, 0, 255, 50);
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 7px;
+    font-family: "Consolas";
+}
+
+#IconButton {
+    background: transparent;
+    border: none;
+    color: rgba(0, 200, 200, 180);
+    font-size: 14px;
+    border-radius: 6px;
+    padding: 3px 5px;
+}
+#IconButton:hover {
+    background: rgba(0, 255, 255, 18);
+    color: rgba(0, 255, 255, 255);
+}
+#IconButton:pressed {
+    background: rgba(0, 255, 255, 35);
+}
+
+#CloseButton {
+    background: transparent;
+    border: none;
+    color: rgba(0, 200, 200, 160);
+    font-size: 13px;
+    border-radius: 6px;
+    padding: 3px 5px;
+}
+#CloseButton:hover {
+    background: rgba(255, 0, 80, 20);
+    color: rgba(255, 50, 100, 255);
+}
+
+#MetricValue {
+    color: rgba(0, 255, 255, 255);
+    font-family: "Consolas", "Courier New";
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#MetricLabel {
+    color: rgba(0, 180, 180, 200);
+    font-family: "Consolas", "Courier New";
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
+#MetricValueSmall {
+    color: rgba(0, 255, 255, 230);
+    font-family: "Consolas", "Courier New";
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#Divider {
+    background: rgba(0, 255, 255, 20);
+    max-height: 1px;
+    min-height: 1px;
+}
+
+#SectionTitle {
+    color: rgba(0, 255, 255, 160);
+    font-family: "Consolas";
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+#ExpandButton {
+    background: transparent;
+    border: 1px solid rgba(0, 255, 255, 35);
+    border-radius: 8px;
+    color: rgba(0, 200, 200, 200);
+    font-size: 9px;
+    font-family: "Consolas";
+    padding: 2px 12px;
+}
+#ExpandButton:hover {
+    background: rgba(0, 255, 255, 12);
+    border-color: rgba(0, 255, 255, 70);
+    color: rgba(0, 255, 255, 255);
+}
+
+#StatusBar {
+    color: rgba(0, 140, 140, 180);
+    font-family: "Consolas";
+    font-size: 9px;
+}
+#StatusBar[error="true"] {
+    color: rgba(255, 50, 100, 200);
+}
+
+#ModelName {
+    color: rgba(0, 200, 200, 200);
+    font-family: "Consolas";
+    font-size: 10px;
+}
+#ModelCost {
+    color: rgba(0, 255, 255, 230);
+    font-family: "Consolas";
+    font-size: 10px;
+    font-weight: 700;
+}
+
+#AlertLabel {
+    color: rgba(255, 200, 0, 230);
+    font-size: 9px;
+    font-family: "Consolas";
+}

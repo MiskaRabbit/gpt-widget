@@ -1,0 +1,153 @@
+/* ═══════════════════════════════════════════════
+   Theme: Dark Glass  —  暗色玻璃态毛玻璃风格
+   ═══════════════════════════════════════════════ */
+
+/* ── Main Widget ── */
+#MainWidget {
+    background: rgba(8, 8, 24, 215);
+    border: 1px solid rgba(99, 102, 241, 55);
+    border-radius: 18px;
+}
+
+/* ── Header ── */
+#HeaderBar {
+    background: transparent;
+    border-bottom: 1px solid rgba(99, 102, 241, 30);
+    border-radius: 0px;
+    min-height: 36px;
+}
+
+#AppTitle {
+    color: rgba(226, 232, 240, 220);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#PlanBadge {
+    color: rgba(99, 102, 241, 255);
+    background: rgba(99, 102, 241, 18);
+    border: 1px solid rgba(99, 102, 241, 40);
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 7px;
+    font-family: "Segoe UI";
+}
+
+/* ── Icon Buttons (refresh, settings, close) ── */
+#IconButton {
+    background: transparent;
+    border: none;
+    color: rgba(148, 163, 184, 180);
+    font-size: 14px;
+    border-radius: 8px;
+    padding: 3px 5px;
+}
+#IconButton:hover {
+    background: rgba(99, 102, 241, 22);
+    color: rgba(226, 232, 240, 255);
+}
+#IconButton:pressed {
+    background: rgba(99, 102, 241, 40);
+}
+
+#CloseButton {
+    background: transparent;
+    border: none;
+    color: rgba(148, 163, 184, 160);
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 3px 5px;
+}
+#CloseButton:hover {
+    background: rgba(239, 68, 68, 25);
+    color: rgba(239, 68, 68, 255);
+}
+
+/* ── Metrics Labels ── */
+#MetricValue {
+    color: rgba(226, 232, 240, 255);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#MetricLabel {
+    color: rgba(100, 116, 139, 220);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+#MetricValueSmall {
+    color: rgba(226, 232, 240, 230);
+    font-family: "Segoe UI", "Microsoft YaHei";
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ── Divider ── */
+#Divider {
+    background: rgba(99, 102, 241, 22);
+    max-height: 1px;
+    min-height: 1px;
+}
+
+/* ── Section Title ── */
+#SectionTitle {
+    color: rgba(99, 102, 241, 200);
+    font-family: "Segoe UI";
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+/* ── Expand Toggle Button ── */
+#ExpandButton {
+    background: transparent;
+    border: 1px solid rgba(99, 102, 241, 30);
+    border-radius: 10px;
+    color: rgba(148, 163, 184, 200);
+    font-size: 9px;
+    font-family: "Segoe UI";
+    padding: 2px 12px;
+}
+#ExpandButton:hover {
+    background: rgba(99, 102, 241, 15);
+    border-color: rgba(99, 102, 241, 60);
+    color: rgba(226, 232, 240, 220);
+}
+
+/* ── Status Bar ── */
+#StatusBar {
+    color: rgba(71, 85, 105, 200);
+    font-family: "Segoe UI";
+    font-size: 9px;
+    padding: 0px 2px;
+}
+#StatusBar[error="true"] {
+    color: rgba(239, 68, 68, 200);
+}
+
+/* ── Model Row ── */
+#ModelName {
+    color: rgba(148, 163, 184, 210);
+    font-family: "Segoe UI";
+    font-size: 10px;
+}
+#ModelCost {
+    color: rgba(226, 232, 240, 210);
+    font-family: "Segoe UI";
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* ── Alert indicator ── */
+#AlertLabel {
+    color: rgba(251, 191, 36, 230);
+    font-size: 9px;
+    font-family: "Segoe UI";
+}
