@@ -3,11 +3,18 @@ GPT Usage Widget — Config Manager (Codex version)
 Handles settings persistence and secure session token storage via keyring.
 """
 import json
-import winreg
 import os
 import sys
 from pathlib import Path
 from typing import Any, Optional
+
+IS_WINDOWS = sys.platform.startswith("win")
+IS_MACOS = sys.platform == "darwin"
+
+if IS_WINDOWS:
+    import winreg
+else:
+    winreg = None
 
 try:
     import keyring
@@ -16,7 +23,7 @@ except ImportError:
     KEYRING_AVAILABLE = False
 
 KEYRING_SERVICE = "gpt-usage-widget"
-KEYRING_USER = "chatgpt-session-token"
+KEYRING_USER = "chatgpt-cookie-header"
 
 CONFIG_DIR = Path.home() / ".gpt-widget"
 CONFIG_FILE = CONFIG_DIR / "settings.json"
@@ -37,6 +44,13 @@ DEFAULT_SETTINGS: dict = {
 
 AUTOSTART_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
 AUTOSTART_NAME = "GPTUsageWidget"
+COOKIE_CONFIG_KEYS = (
+    "_raw_cookies",
+    "_session_token_0",
+    "_session_token_1",
+    "_session_token",
+    "_session_token_fallback",
+)
 
 
 class ConfigManager:
@@ -54,6 +68,7 @@ class ConfigManager:
                 self._data = dict(DEFAULT_SETTINGS)
         else:
             self._data = dict(DEFAULT_SETTINGS)
+        self._migrate_cookie_config_to_keyring()
 
     def save(self):
         try:
@@ -71,19 +86,99 @@ class ConfigManager:
         self._data[key] = value
         self.save()
 
+    def supports_autostart(self) -> bool:
+        return IS_WINDOWS
+
+    def _get_secret(self) -> str:
+        if not KEYRING_AVAILABLE:
+            return ""
+        try:
+            return keyring.get_password(KEYRING_SERVICE, KEYRING_USER) or ""
+        except Exception as e:
+            print(f"[Config] Keyring read failed: {e}")
+            return ""
+
+    def _set_secret(self, value: str) -> bool:
+        if not KEYRING_AVAILABLE:
+            return False
+        try:
+            keyring.set_password(KEYRING_SERVICE, KEYRING_USER, value)
+            return True
+        except Exception as e:
+            print(f"[Config] Keyring write failed: {e}")
+            return False
+
+    def _delete_secret(self):
+        if not KEYRING_AVAILABLE:
+            return
+        try:
+            keyring.delete_password(KEYRING_SERVICE, KEYRING_USER)
+        except Exception:
+            pass
+
+    def _legacy_cookie_header_from_config(self) -> str:
+        raw = self._data.get("_raw_cookies", "").strip()
+        if raw:
+            return raw
+
+        cookies = {}
+        t0 = self._data.get("_session_token_0", "")
+        t1 = self._data.get("_session_token_1", "")
+        if t0 and t1:
+            cookies["__Secure-next-auth.session-token.0"] = t0
+            cookies["__Secure-next-auth.session-token.1"] = t1
+        elif t0:
+            cookies["__Secure-next-auth.session-token.0"] = t0
+        else:
+            single = (self._data.get("_session_token")
+                      or self._data.get("_session_token_fallback")
+                      or "")
+            if single:
+                cookies["__Secure-next-auth.session-token"] = single
+
+        if not cookies:
+            return ""
+        return "; ".join(f"{k}={v}" for k, v in cookies.items())
+
+    def _clear_cookie_config_fields(self):
+        changed = False
+        for key in COOKIE_CONFIG_KEYS:
+            if key in self._data:
+                self._data.pop(key, None)
+                changed = True
+        if changed:
+            self.save()
+
+    def _migrate_cookie_config_to_keyring(self):
+        existing = self._get_secret()
+        legacy = self._legacy_cookie_header_from_config()
+        if existing:
+            self._clear_cookie_config_fields()
+            return
+        if legacy and self._set_secret(legacy):
+            self._clear_cookie_config_fields()
+            print("[Config] Migrated cookies from settings.json to keyring")
+
     # ── Raw Cookie Header ────────────────────────────────────────────────────
     # User pastes the entire "Cookie:" header value from browser DevTools.
     # This captures ALL cookies (session tokens + cf_clearance + etc.)
 
     def set_raw_cookies(self, raw_cookie_str: str):
         """Save the full Cookie header string from the browser."""
-        self._data["_raw_cookies"] = raw_cookie_str.strip()
-        self.save()
+        raw_cookie_str = raw_cookie_str.strip()
+        if self._set_secret(raw_cookie_str):
+            self._clear_cookie_config_fields()
+        else:
+            self._data["_raw_cookies"] = raw_cookie_str
+            self.save()
         print(f"[Config] Saved raw cookie string ({len(raw_cookie_str)} chars)")
 
     def get_raw_cookies(self) -> str:
         """Get the stored raw cookie string."""
-        return self._data.get("_raw_cookies", "")
+        secret = self._get_secret()
+        if secret:
+            return secret
+        return self._legacy_cookie_header_from_config()
 
     def get_session_cookies(self) -> dict:
         """
@@ -163,21 +258,15 @@ class ConfigManager:
 
     def set_session_token(self, token0: str, token1: str = ""):
         """Legacy: Save split cookie parts."""
-        self._data["_session_token_0"] = token0.strip()
-        self._data["_session_token_1"] = token1.strip()
-        self._data["_session_token"] = token0.strip()
-        self.save()
+        cookies = {"__Secure-next-auth.session-token.0": token0.strip()}
+        if token1.strip():
+            cookies["__Secure-next-auth.session-token.1"] = token1.strip()
+        raw = "; ".join(f"{k}={v}" for k, v in cookies.items())
+        self.set_raw_cookies(raw)
 
     def clear_session_token(self):
-        for key in (
-            "_raw_cookies",
-            "_session_token_0",
-            "_session_token_1",
-            "_session_token",
-            "_session_token_fallback",
-        ):
-            self._data.pop(key, None)
-        self.save()
+        self._delete_secret()
+        self._clear_cookie_config_fields()
         print("[Config] Cleared all cookies")
 
     # ── Network Proxy ────────────────────────────────────────────────────────
@@ -196,7 +285,7 @@ class ConfigManager:
             if value:
                 return self._normalize_proxy_url(value)
 
-        if self._data.get("auto_detect_proxy", True):
+        if IS_WINDOWS and self._data.get("auto_detect_proxy", True):
             detected = self._get_windows_proxy()
             if detected:
                 return detected
@@ -204,6 +293,8 @@ class ConfigManager:
         return ""
 
     def _get_windows_proxy(self) -> str:
+        if not IS_WINDOWS or winreg is None:
+            return ""
         try:
             key = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER,
@@ -256,6 +347,10 @@ class ConfigManager:
     # ── Autostart ─────────────────────────────────────────────────────────────
 
     def set_autostart(self, enabled: bool):
+        if not IS_WINDOWS or winreg is None:
+            self.set("auto_start", False)
+            print("[Config] Autostart is only supported on Windows")
+            return
         try:
             key = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER, AUTOSTART_KEY,
@@ -280,6 +375,8 @@ class ConfigManager:
             print(f"[Config] Autostart error: {e}")
 
     def get_autostart(self) -> bool:
+        if not IS_WINDOWS or winreg is None:
+            return False
         try:
             key = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER, AUTOSTART_KEY, 0, winreg.KEY_READ

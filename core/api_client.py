@@ -11,6 +11,7 @@ Auth flow:
 Uses curl_cffi to impersonate Chrome TLS fingerprint (bypasses Cloudflare).
 """
 import json
+import platform
 import time
 from dataclasses import dataclass, field
 from typing import Any, Optional
@@ -38,6 +39,27 @@ _cached_user_info: dict = {}
 _cached_expires: str = ""
 _cached_account_id: str = ""
 TOKEN_CACHE_SECONDS = 30 * 60  # reuse token for up to 30 minutes
+
+
+def _browser_user_agent() -> str:
+    system = platform.system().lower()
+    if system == "darwin":
+        return (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/131.0.0.0 Safari/537.36"
+        )
+    if system == "windows":
+        return (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/131.0.0.0 Safari/537.36"
+        )
+    return (
+        "Mozilla/5.0 (X11; Linux x86_64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/131.0.0.0 Safari/537.36"
+    )
 
 
 @dataclass
@@ -134,11 +156,7 @@ class CodexAPIWorker(QThread):
         # Query quota endpoints using Bearer token (no Cloudflare needed!)
         auth_headers = {
             "Authorization": f"Bearer {access_token}",
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/131.0.0.0 Safari/537.36"
-            ),
+            "User-Agent": _browser_user_agent(),
             "Accept": "application/json",
             "Referer": "https://chatgpt.com/codex",
             "Origin": "https://chatgpt.com",
@@ -201,11 +219,7 @@ class CodexAPIWorker(QThread):
 
         headers = {
             "Cookie": raw_cookie,
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/131.0.0.0 Safari/537.36"
-            ),
+            "User-Agent": _browser_user_agent(),
             "Accept": "application/json",
             "Referer": "https://chatgpt.com/",
             "Origin": "https://chatgpt.com",

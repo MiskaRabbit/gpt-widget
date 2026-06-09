@@ -1,235 +1,133 @@
 # GPT Usage Widget
 
-一个 Windows 桌面小组件，用于实时监控 ChatGPT / Codex 计算额度使用情况。
+一个桌面悬浮小工具，用于展示 ChatGPT / Codex 的 5 小时额度和周额度。
 
----
+当前支持：
 
-## 📁 项目结构
+- Windows 10/11：源码运行、托盘、设置、Windows 注册表开机自启。
+- macOS：源码运行、菜单栏托盘、系统钥匙串 Cookie 存储。
 
-```
+## 功能
+
+- 双环展示 5 小时额度和周额度。
+- 支持普通模式和极简双环模式。
+- 支持手动刷新、定时刷新、主题和透明度设置。
+- Cookie 通过 `keyring` 存储到系统凭据后端；旧版 JSON Cookie 会在首次读取时自动迁移。
+- 代理支持手动填写 `proxy_url`，也会读取 `HTTPS_PROXY`、`HTTP_PROXY`、`ALL_PROXY` 环境变量。
+- Windows 可自动读取系统代理和设置开机自启；macOS 暂不支持系统代理自动探测和开机自启。
+
+## 项目结构
+
+```text
 gpt-widget/
-├── main.py                 # 程序入口
-├── requirements.txt        # Python 依赖
-├── start.ps1               # 一键启动脚本（PowerShell）
+├── main.py
+├── requirements.txt
+├── start.ps1
+├── start.command
 ├── config/
-│   └── config_manager.py   # 配置管理（Cookie 存储、开机自启等）
+│   └── config_manager.py
 ├── core/
-│   ├── api_client.py       # ChatGPT API 调用（认证 + 额度查询）
-│   ├── scheduler.py        # 定时刷新调度器
-│   └── data_cache.py       # 数据缓存
-├── ui/
-│   ├── widget.py           # 主窗口小组件
-│   ├── settings_dialog.py  # 设置对话框
-│   └── themes.py           # 主题管理
-└── tray/
-    └── tray_icon.py        # 系统托盘图标
+│   ├── api_client.py
+│   ├── data_cache.py
+│   └── scheduler.py
+├── tray/
+│   └── tray_icon.py
+└── ui/
+    ├── components/
+    ├── settings_dialog.py
+    ├── themes.py
+    └── widget.py
 ```
 
----
+## 运行要求
 
-## 🚀 快速启动（开发模式）
+- Python 3.11+ 推荐。
+- Windows 10/11 或 macOS。
+- macOS 首次保存 Cookie 时可能会弹出钥匙串访问授权。
 
-### 前置要求
+依赖说明：
 
-- **Python 3.9+**（推荐 3.9 ~ 3.12）
-- **Windows 10/11**
+| 包 | 用途 |
+| --- | --- |
+| PyQt6 | 桌面界面 |
+| curl_cffi | 带 Chrome TLS 指纹的请求 |
+| keyring | Windows 凭据管理器 / macOS 钥匙串存储 |
+| pywin32 | 仅 Windows 安装，用于注册表自启和代理读取 |
 
-### 方式一：一键启动脚本（推荐）
-
-在项目根目录下右键打开 PowerShell，运行：
+## Windows 启动
 
 ```powershell
+cd C:\Users\xujin\Desktop\xn\ed-util\gpt-widget
 .\start.ps1
 ```
 
-该脚本会自动：
-1. 查找本地 Python 安装
-2. 创建虚拟环境（`.venv-py39` 或类似）
-3. 安装依赖
-4. 启动程序
-
-### 方式二：手动启动
+手动启动：
 
 ```powershell
-# 1. 创建虚拟环境
 python -m venv .venv
-
-# 2. 激活虚拟环境
 .\.venv\Scripts\Activate.ps1
-
-# 3. 安装依赖
 pip install -r requirements.txt
-
-# 4. 启动程序
 python main.py
 ```
 
-### 依赖列表
+## macOS 启动
 
-| 包名 | 版本要求 | 用途 |
-|------|---------|------|
-| PyQt6 | >=6.6.0, <6.11 | GUI 界面 |
-| requests | >=2.31.0 | HTTP 请求 |
-| keyring | >=24.0.0 | 安全凭据存储 |
-| pywin32 | >=306 | Windows 注册表操作（开机自启） |
+第一次运行建议先给脚本执行权限：
 
----
-
-## 🔑 配置 Cookie
-
-程序启动后会弹出设置对话框，需要配置 ChatGPT 的 Cookie：
-
-1. 浏览器打开 [chatgpt.com](https://chatgpt.com) 并登录
-2. 按 **F12** → 点击 **Network（网络）** 标签
-3. 刷新页面（Ctrl+R）
-4. 点击请求列表中的任意请求
-5. 在右侧 **Request Headers** 中找到 `Cookie:` 那一行
-6. 复制 `Cookie:` 后面的 **完整内容**
-7. 粘贴到设置对话框的输入框中，点击保存
-
-> **为什么需要完整 Cookie？**
-> ChatGPT 使用 Cloudflare 防护，除了 session token 外还需要 `cf_clearance` 等 cookie 才能正常访问 API。
-
----
-
-## 📦 打包为 EXE
-
-### 方式一：PyInstaller（推荐）
-
-#### 1. 安装 PyInstaller
-
-```powershell
-# 确保在虚拟环境中
-pip install pyinstaller
+```bash
+cd /path/to/gpt-widget
+chmod +x start.command
+./start.command
 ```
 
-#### 2. 打包命令
+也可以手动启动：
 
-**单文件打包**（生成单个 exe，体积较大，启动稍慢）：
-
-```powershell
-pyinstaller --noconfirm --onefile --windowed --name "GPTWidget" --icon=NONE main.py
+```bash
+cd /path/to/gpt-widget
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python main.py
 ```
 
-**目录打包**（生成文件夹，启动更快，推荐）：
+macOS 说明：
 
-```powershell
-pyinstaller --noconfirm --onedir --windowed --name "GPTWidget" --icon=NONE main.py
-```
+- Cookie 会通过 `keyring` 写入系统钥匙串，不再写入 `~/.gpt-widget/settings.json`。
+- 如果旧配置里已有 `_raw_cookies` 或旧 session token 字段，首次读取时会迁移到钥匙串并清理旧字段。
+- macOS 暂不显示“开机自动启动”设置项。
+- macOS 暂不读取系统代理设置；请手动填写代理，或设置 `HTTPS_PROXY` / `HTTP_PROXY` / `ALL_PROXY`。
 
-参数说明：
-| 参数 | 说明 |
-|------|------|
-| `--onefile` | 打包为单个 exe 文件 |
-| `--onedir` | 打包为文件夹（推荐，启动更快） |
-| `--windowed` | 不显示控制台窗口 |
-| `--name "GPTWidget"` | 输出文件名 |
-| `--icon=icon.ico` | 自定义图标（需准备 .ico 文件） |
+## 配置 Cookie
 
-#### 3. 打包输出
+1. 浏览器打开 [chatgpt.com](https://chatgpt.com) 并登录。
+2. 打开开发者工具，进入 Network。
+3. 刷新页面，点开任意 chatgpt.com 请求。
+4. 在 Request Headers 中找到 `Cookie`。
+5. 复制 `Cookie:` 后面的完整内容。
+6. 粘贴到小工具设置面板里并保存。
 
-- 单文件模式：`dist/GPTWidget.exe`
-- 目录模式：`dist/GPTWidget/GPTWidget.exe`
+建议复制完整 Cookie，而不仅是 session token。ChatGPT 可能还需要 `cf_clearance` 等 cookie 才能通过校验。
 
-#### 4. 使用 .spec 文件（高级）
+## 配置位置
 
-首次打包会生成 `GPTWidget.spec` 文件，可编辑后复用：
+- 非敏感设置：`~/.gpt-widget/settings.json`
+- 日志：`~/.gpt-widget/logs/app.log`
+- Cookie：系统凭据后端，由 `keyring` 管理。
 
-```powershell
-# 编辑 spec 文件后重新打包
-pyinstaller GPTWidget.spec
-```
+## 常见问题
 
-完整 spec 文件示例：
+### macOS 上提示无法写入钥匙串
 
-```python
-# GPTWidget.spec
-block_cipher = None
+确认系统弹出的钥匙串授权已允许。如果仍失败，程序会退回到 JSON 配置保存，但这不是推荐路径。
 
-a = Analysis(
-    ['main.py'],
-    pathex=[],
-    binaries=[],
-    datas=[],
-    hiddenimports=[
-        'PyQt6.sip',
-        'keyring.backends',
-        'keyring.backends.Windows',
-    ],
-    hookspath=[],
-    hooksconfig={},
-    runtime_hooks=[],
-    excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=block_cipher,
-    noarchive=False,
-)
+### 提示网络连接失败
 
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+如果浏览器能打开 ChatGPT，但小工具失败，通常需要配置代理。优先在设置面板填写类似 `http://127.0.0.1:7890` 的代理地址。
 
-exe = EXE(
-    pyz,
-    a.scripts,
-    a.binaries,        # 单文件模式包含此行
-    a.zipfiles,        # 单文件模式包含此行
-    a.datas,           # 单文件模式包含此行
-    [],
-    name='GPTWidget',
-    debug=False,
-    bootloader_ignore_signals=False,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    runtime_tmpdir=None,
-    console=False,     # 不显示控制台
-    disable_windowed_traceback=False,
-    argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
-    # icon='icon.ico',  # 取消注释并指定图标文件
-)
-```
+### 提示 Session 已过期
 
-### 方式二：Nuitka（性能更好）
+重新从浏览器 Network 面板复制最新完整 Cookie 并保存。
 
-```powershell
-# 安装 Nuitka
-pip install nuitka
+### macOS 没有开机自启
 
-# 打包
-nuitka --standalone --onefile --windows-console-mode=disable --output-filename=GPTWidget.exe main.py
-```
-
-> **注意**：Nuitka 首次打包需要下载 C 编译器，耗时较长。
-
----
-
-## ❓ 常见问题
-
-### Q: 提示 "Session 已过期"
-确保从浏览器复制的是**完整的 Cookie 请求头**（包含 `cf_clearance`），而不仅是 session token。
-
-### Q: 打包后运行报错找不到模块
-在 PyInstaller 命令中添加 `--hidden-import` 参数：
-```powershell
-pyinstaller --onefile --windowed --hidden-import=keyring.backends.Windows --hidden-import=PyQt6.sip main.py
-```
-
-### Q: 打包后的 exe 被杀毒软件误报
-这是 PyInstaller 打包的常见问题，可以：
-- 使用 `--onedir` 模式替代 `--onefile`
-- 对 exe 进行数字签名
-- 在杀毒软件中添加白名单
-
-### Q: Cookie 多久过期？
-ChatGPT 的 session cookie 通常有效期为 **1-2 周**，过期后需要重新从浏览器获取。
-
----
-
-## 📝 配置文件位置
-
-程序配置保存在：`%USERPROFILE%\.gpt-widget\settings.json`
-
-日志文件位于：`%USERPROFILE%\.gpt-widget\logs\app.log`
+当前 macOS 版本只支持源码运行和基础功能，不包含 LaunchAgent、自启、签名、notarization 或 `.dmg` 发布。

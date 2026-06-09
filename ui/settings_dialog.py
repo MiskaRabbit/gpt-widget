@@ -144,7 +144,9 @@ class SettingsDialog(QDialog):
 
         self._autostart_cb = QCheckBox("开机自动启动")
         self._autostart_cb.setObjectName("SettingsCheck")
-        vbox.addWidget(self._autostart_cb)
+        self._autostart_supported = self._config.supports_autostart()
+        if self._autostart_supported:
+            vbox.addWidget(self._autostart_cb)
 
         button_row = QHBoxLayout()
         button_row.setSpacing(10)
@@ -203,7 +205,8 @@ class SettingsDialog(QDialog):
         self._interval_slider.setValue(self._config.get("refresh_interval_minutes", 5))
         self._opacity_slider.setValue(self._config.get("window_opacity", 92))
         self._minimal_mode_cb.setChecked(self._config.get("minimal_mode", False))
-        self._autostart_cb.setChecked(self._config.get_autostart())
+        if self._autostart_supported:
+            self._autostart_cb.setChecked(self._config.get_autostart())
         self._proxy_edit.setText(self._config.get("proxy_url", ""))
 
     def _save(self):
@@ -218,7 +221,8 @@ class SettingsDialog(QDialog):
         self._config.set("window_opacity", self._opacity_slider.value())
         self._config.set("minimal_mode", self._minimal_mode_cb.isChecked())
         self._config.set_proxy_url(self._proxy_edit.text())
-        self._config.set_autostart(self._autostart_cb.isChecked())
+        if self._autostart_supported:
+            self._config.set_autostart(self._autostart_cb.isChecked())
 
         self.settings_saved.emit()
         self.accept()
