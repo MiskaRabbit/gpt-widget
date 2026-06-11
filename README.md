@@ -131,3 +131,7 @@ macOS 说明：
 ### macOS 没有开机自启
 
 当前 macOS 版本只支持源码运行和基础功能，不包含 LaunchAgent、自启、签名、notarization 或 `.dmg` 发布。
+
+## 致谢
+
+特别感谢 [linux.do](https://linux.do/) 社区的反馈与支持。
